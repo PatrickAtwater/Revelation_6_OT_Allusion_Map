@@ -1,0 +1,2240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revelation 6:12–17 — Old Testament Allusions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --c-isaiah: #f59e0b;
+            --c-ezekiel: #14b8a6;
+            --c-joel: #4ade80;
+            --c-hab: #a78bfa;
+            --c-allusion: #94a3b8;
+            --c-nt: #fbbf24;
+            --c-center: #f97316;
+            --bg: #07060f;
+            --panel-bg: rgba(9, 7, 20, 0.98);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg);
+            font-family: 'Inter', sans-serif;
+            color: #e2e8f0;
+        }
+
+        /* ── Starfield ── */
+        #stars {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ════════════════════════════════════════════
+     DESKTOP LAYOUT  (≥ 768px)
+  ════════════════════════════════════════════ */
+        #desktop-view {
+            display: none;
+        }
+
+        @media (min-width: 768px) {
+
+            html,
+            body {
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+            }
+
+            #desktop-view {
+                display: block;
+            }
+
+            #mobile-view {
+                display: none;
+            }
+        }
+
+        /* ── Map container ── */
+        #map-wrap {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        #map {
+            position: absolute;
+            width: 1540px;
+            height: 960px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1);
+            transform-origin: center center;
+            transition: transform 0.25s ease;
+        }
+
+        /* ── SVG Lines ── */
+        #lines {
+            position: absolute;
+            inset: 0;
+            width: 1540px;
+            height: 960px;
+            pointer-events: none;
+        }
+
+        .line-main {
+            stroke-width: 2.5;
+            fill: none;
+            opacity: 0.55;
+            stroke-dasharray: 6 4;
+        }
+
+        .line-sub {
+            stroke-width: 1.5;
+            fill: none;
+            opacity: 0.40;
+            stroke-dasharray: 4 5;
+        }
+
+        /* ── Nodes ── */
+        .node {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            transition: transform 0.2s ease, filter 0.2s ease;
+        }
+
+        .node:hover {
+            transform: translate(-50%, -50%) scale(1.08);
+            filter: brightness(1.2);
+        }
+
+        .node.active {
+            transform: translate(-50%, -50%) scale(1.1);
+            filter: brightness(1.35);
+        }
+
+        /* ── Central Node ── */
+        #node-center {
+            width: 186px;
+            height: 186px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 40% 35%, #ffb347 0%, #e05a00 55%, #7c1a00 100%);
+            border: 3px solid #ffb347;
+            box-shadow: 0 0 40px 14px rgba(249, 115, 22, 0.55), 0 0 80px 30px rgba(249, 115, 22, 0.25), inset 0 0 30px rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 14px;
+            position: relative;
+        }
+
+        /* Glow pulse uses opacity+transform on a pseudo-element — GPU composited, no repaint */
+        #node-center::after {
+            content: '';
+            position: absolute;
+            inset: -22px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(249, 115, 22, 0.45) 0%, transparent 68%);
+            animation: pulse-center 4s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes pulse-center {
+
+            0%,
+            100% {
+                opacity: 0.7;
+                transform: scale(0.88);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.12);
+            }
+        }
+
+        #node-center .ref {
+            font-family: 'Cinzel', serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: #ffe8b0;
+            letter-spacing: 0.04em;
+        }
+
+        #node-center .sub {
+            font-family: 'Cinzel', serif;
+            font-size: 19px;
+            font-weight: 700;
+            color: #fff;
+            margin: 2px 0;
+        }
+
+        #node-center .title {
+            font-family: 'Cinzel', serif;
+            font-size: 10px;
+            color: #fcd08a;
+            margin-top: 2px;
+            opacity: 0.8;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        #node-center .hint {
+            font-size: 9.5px;
+            color: #ffc97d;
+            margin-top: 8px;
+            opacity: 0.65;
+            line-height: 1.55;
+        }
+
+        /* ── Book Nodes ── */
+        .node-book .shell {
+            padding: 9px 18px;
+            border-radius: 10px;
+            border: 2px solid;
+            font-family: 'Cinzel', serif;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            text-align: center;
+            white-space: nowrap;
+            background: rgba(10, 8, 20, 0.85);
+            backdrop-filter: blur(6px);
+            transition: box-shadow 0.2s;
+        }
+
+        .node-book:hover .shell,
+        .node-book.active .shell {
+            box-shadow: 0 0 18px 6px var(--book-color), inset 0 0 12px rgba(255, 255, 255, 0.04);
+        }
+
+        /* ── Passage Nodes ── */
+        .node-passage .shell {
+            padding: 7px 13px;
+            border-radius: 8px;
+            border: 1.5px solid;
+            font-size: 11.5px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-align: center;
+            white-space: nowrap;
+            background: rgba(10, 8, 20, 0.80);
+            backdrop-filter: blur(6px);
+            transition: box-shadow 0.2s;
+        }
+
+        .node-passage .shell .ref-label {
+            font-family: 'Cinzel', serif;
+            font-size: 10.5px;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .node-passage .shell .theme-badge {
+            display: inline-block;
+            font-size: 9px;
+            font-weight: 500;
+            padding: 1px 5px;
+            border-radius: 4px;
+            margin: 2px 2px 0;
+            opacity: 0.75;
+            line-height: 1.5;
+            cursor: pointer;
+            transition: opacity 0.15s, outline 0.15s;
+        }
+
+        .node-passage .shell .theme-badge:hover {
+            opacity: 1;
+        }
+
+        .theme-badge.filter-active {
+            outline: 1.5px solid currentColor !important;
+            opacity: 1 !important;
+            background: currentColor !important;
+            color: #07060f !important;
+        }
+
+        /* ── Filter dimming (desktop) ── */
+        .node-passage.filter-dim {
+            opacity: 0.12 !important;
+            filter: grayscale(0.6);
+            transition: opacity 0.25s, filter 0.25s;
+        }
+
+        .node-passage.filter-match {
+            opacity: 1 !important;
+            filter: none;
+        }
+
+        .node-book.filter-dim {
+            opacity: 0.2 !important;
+            transition: opacity 0.25s;
+        }
+
+        /* ── Filter chip (desktop) ── */
+        #filter-chip {
+            position: fixed;
+            top: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 60;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            background: rgba(10, 8, 22, 0.92);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 20px;
+            padding: 7px 10px 7px 14px;
+            backdrop-filter: blur(14px);
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            white-space: nowrap;
+        }
+
+        #filter-chip.active {
+            display: flex;
+        }
+
+        #filter-chip-label {
+            font-weight: 600;
+        }
+
+        #filter-chip-prefix {
+            opacity: 0.45;
+            margin-right: 2px;
+        }
+
+        #filter-chip-clear {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 13px;
+            line-height: 1;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s, color 0.15s;
+            margin-left: 2px;
+        }
+
+        #filter-chip-clear:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        /* ── Rev passage clickable phrases ── */
+        .rev-text em,
+        .rc-text em {
+            cursor: pointer;
+            border-radius: 3px;
+            padding: 0 2px;
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .rev-text em:hover,
+        .rc-text em:hover {
+            background: rgba(249, 115, 22, 0.22);
+        }
+
+        .rev-link.rev-filter-active {
+            background: rgba(249, 115, 22, 0.38) !important;
+            color: #fff !important;
+            box-shadow: 0 0 0 1.5px rgba(249, 115, 22, 0.7);
+        }
+
+        .node-passage:hover .shell,
+        .node-passage.active .shell {
+            box-shadow: 0 0 14px 5px var(--book-color);
+        }
+
+        /* ── Detail Panel (desktop) ── */
+        #detail-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 420px;
+            height: 100vh;
+            background: rgba(9, 7, 20, 0.97);
+            border-left: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(18px);
+            z-index: 100;
+            transform: translateX(100%);
+            transition: transform 0.35s cubic-bezier(.4, 0, .2, 1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        #detail-panel.open {
+            transform: translateX(0);
+        }
+
+        #panel-header {
+            padding: 22px 24px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        #panel-book {
+            font-family: 'Cinzel', serif;
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            opacity: 0.5;
+            margin-bottom: 4px;
+        }
+
+        #panel-ref {
+            font-family: 'Cinzel', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.2;
+        }
+
+        #panel-themes {
+            margin-top: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .ptag {
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            padding: 2px 8px;
+            border-radius: 20px;
+            border: 1px solid;
+            opacity: 0.8;
+        }
+
+        #panel-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 22px;
+            line-height: 1;
+            transition: color 0.15s;
+        }
+
+        #panel-close:hover {
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        #panel-body {
+            padding: 22px 24px 30px;
+            overflow-y: auto;
+            flex: 1;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+        }
+
+        #panel-intro {
+            font-size: 12px;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.45);
+            margin-bottom: 16px;
+            font-style: italic;
+        }
+
+        #panel-context {
+            font-size: 13px;
+            line-height: 1.75;
+            color: rgba(255, 255, 255, 0.58);
+            background: rgba(255, 255, 255, 0.04);
+            border-left: 3px solid rgba(255, 255, 255, 0.15);
+            border-radius: 0 6px 6px 0;
+            padding: 10px 14px;
+            margin-bottom: 18px;
+            font-style: italic;
+        }
+
+        #panel-text {
+            font-family: 'EB Garamond', serif;
+            font-size: 16.5px;
+            line-height: 1.85;
+            color: #dde4ef;
+            white-space: pre-wrap;
+        }
+
+        #panel-text .verse-num {
+            font-size: 11px;
+            font-weight: 700;
+            vertical-align: super;
+            margin-right: 2px;
+            opacity: 0.55;
+        }
+
+        #panel-connection {
+            margin-top: 20px;
+            padding: 14px 16px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            font-size: 13px;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        #panel-connection strong {
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        /* ── Center panel (desktop) ── */
+        #center-panel {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 420px;
+            height: 100vh;
+            background: rgba(9, 7, 20, 0.97);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(18px);
+            z-index: 100;
+            transform: translateX(-100%);
+            transition: transform 0.35s cubic-bezier(.4, 0, .2, 1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        #center-panel.open {
+            transform: translateX(0);
+        }
+
+        #center-panel .panel-header-inner {
+            padding: 22px 24px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        #center-panel .ph-label {
+            font-family: 'Cinzel', serif;
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            opacity: 0.5;
+            margin-bottom: 4px;
+        }
+
+        #center-panel .ph-ref {
+            font-family: 'Cinzel', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        #center-panel .ph-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 22px;
+            line-height: 1;
+            transition: color 0.15s;
+        }
+
+        #center-panel .ph-close:hover {
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        #center-panel .panel-body-inner {
+            padding: 22px 24px 30px;
+            overflow-y: auto;
+            flex: 1;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+        }
+
+        #center-panel .rev-text {
+            font-family: 'EB Garamond', serif;
+            font-size: 16.5px;
+            line-height: 1.9;
+            color: #dde4ef;
+        }
+
+        #center-panel .rev-text em {
+            color: #f9a84d;
+            font-style: italic;
+        }
+
+        /* ── Unseen pulse / book-active / drag ── */
+        /* opacity-only animation — GPU composited, no repaint */
+        @keyframes unseen-pulse {
+
+            0%,
+            100% {
+                opacity: 0.55;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .node-passage.unseen .shell {
+            animation: unseen-pulse 2.8s ease-in-out infinite;
+        }
+
+        .node-book.book-active .shell {
+            box-shadow: 0 0 26px 9px var(--book-color) !important;
+            filter: brightness(1.25);
+        }
+
+        #map-wrap {
+            cursor: grab;
+        }
+
+        #map-wrap.dragging {
+            cursor: grabbing;
+        }
+
+        /* ── Zoom controls ── */
+        #zoom-controls {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(10, 8, 22, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 6px 14px;
+            backdrop-filter: blur(10px);
+        }
+
+        #zoom-controls button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 18px;
+            line-height: 1;
+            padding: 2px 6px;
+            transition: color 0.15s;
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+        }
+
+        #zoom-controls button:hover {
+            color: #fff;
+        }
+
+        #zoom-label {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.45);
+            min-width: 36px;
+            text-align: center;
+        }
+
+        /* ── Legend (desktop) ── */
+        #legend {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 50;
+            background: rgba(10, 8, 22, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 12px 16px;
+            backdrop-filter: blur(10px);
+            font-size: 11px;
+            line-height: 1.9;
+        }
+
+        #legend .ltitle {
+            font-family: 'Cinzel', serif;
+            font-size: 9px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            opacity: 0.45;
+            margin-bottom: 6px;
+        }
+
+        .litem {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .ldot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* ── Hint bar (desktop) ── */
+        #hint {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            z-index: 50;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.3);
+            pointer-events: none;
+        }
+
+        #hint span {
+            display: block;
+            line-height: 1.8;
+        }
+
+        /* ════════════════════════════════════════════
+     MOBILE LAYOUT  (< 768px)
+  ════════════════════════════════════════════ */
+        #mobile-view {
+            position: relative;
+            z-index: 1;
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 0 0 120px;
+            min-height: 100vh;
+        }
+
+        /* ── Hero ── */
+        #hero {
+            padding: 48px 24px 36px;
+            text-align: center;
+            position: relative;
+        }
+
+        #hero-glow {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 340px;
+            height: 200px;
+            background: radial-gradient(ellipse at center top, rgba(249, 115, 22, 0.35) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        #hero-label {
+            font-family: 'Cinzel', serif;
+            font-size: 10px;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: rgba(249, 115, 22, 0.7);
+            margin-bottom: 10px;
+        }
+
+        #hero-ref {
+            font-family: 'Cinzel', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.1;
+            margin-bottom: 6px;
+            text-shadow: 0 0 30px rgba(249, 115, 22, 0.5);
+        }
+
+        #hero-title {
+            font-family: 'Cinzel', serif;
+            font-size: 12px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: rgba(255, 200, 100, 0.6);
+            margin-bottom: 28px;
+        }
+
+        #hero-tags {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 7px;
+            margin-bottom: 28px;
+        }
+
+        .hero-tag {
+            font-size: 10px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(249, 115, 22, 0.35);
+            background: rgba(249, 115, 22, 0.1);
+            color: rgba(255, 180, 80, 0.8);
+            letter-spacing: 0.04em;
+        }
+
+        #rev-card {
+            background: rgba(249, 115, 22, 0.07);
+            border: 1px solid rgba(249, 115, 22, 0.25);
+            border-radius: 14px;
+            padding: 20px 20px 22px;
+            text-align: left;
+        }
+
+        #rev-card .rc-label {
+            font-family: 'Cinzel', serif;
+            font-size: 9px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: rgba(249, 115, 22, 0.6);
+            margin-bottom: 12px;
+        }
+
+        #rev-card .rc-text {
+            font-family: 'EB Garamond', serif;
+            font-size: 16px;
+            line-height: 1.9;
+            color: #dde4ef;
+        }
+
+        #rev-card .rc-text em {
+            color: #f9a84d;
+            font-style: italic;
+        }
+
+        #rev-card sup {
+            font-size: 10px;
+            font-weight: 700;
+            vertical-align: super;
+            margin-right: 2px;
+            opacity: 0.5;
+            font-style: normal;
+        }
+
+        /* ── Section headers ── */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 32px 24px 14px;
+        }
+
+        .sh-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            box-shadow: 0 0 8px 3px var(--dot-color);
+        }
+
+        .sh-label {
+            font-family: 'Cinzel', serif;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .sh-count {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.4);
+            margin-left: auto;
+        }
+
+        /* ── Passage Cards ── */
+        .passage-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 0 16px;
+        }
+
+        .p-card {
+            border-radius: 12px;
+            border: 1.5px solid rgba(255, 255, 255, 0.07);
+            background: rgba(255, 255, 255, 0.03);
+            overflow: hidden;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .p-card.expanded {
+            border-color: var(--card-color) !important;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .p-card-header {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            cursor: pointer;
+            gap: 12px;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            min-height: 56px;
+        }
+
+        .p-card-header:active {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .p-card-accent {
+            width: 3px;
+            border-radius: 2px;
+            background: var(--card-color);
+            flex-shrink: 0;
+            align-self: stretch;
+            min-height: 28px;
+        }
+
+        .p-card-title {
+            flex: 1;
+        }
+
+        .p-card-ref {
+            font-family: 'Cinzel', serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--card-color);
+            margin-bottom: 5px;
+        }
+
+        .p-card-themes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .p-theme-badge {
+            font-size: 9px;
+            padding: 1px 6px;
+            border-radius: 4px;
+            line-height: 1.6;
+            border: 1px solid var(--badge-border);
+            background: var(--badge-bg);
+            color: var(--card-color);
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .p-theme-badge:active {
+            opacity: 0.7;
+        }
+
+        .p-theme-badge.filter-active {
+            background: var(--card-color) !important;
+            color: #07060f !important;
+            border-color: var(--card-color) !important;
+            font-weight: 600;
+        }
+
+        /* ── Filter dim (mobile) ── */
+        .p-card.filter-dim {
+            opacity: 0.15;
+            filter: grayscale(0.5);
+            transition: opacity 0.25s, filter 0.25s;
+            pointer-events: none;
+        }
+
+        .p-card.filter-match {
+            opacity: 1 !important;
+            filter: none;
+            pointer-events: auto;
+        }
+
+        /* ── Filter bar (mobile) ── */
+        #filter-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 70;
+            background: rgba(7, 6, 15, 0.96);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 10px 16px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            transform: translateY(-100%);
+            transition: transform 0.3s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        #filter-bar.active {
+            display: flex;
+            transform: translateY(0);
+        }
+
+        #filter-bar-prefix {
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 0.4;
+            font-family: 'Cinzel', serif;
+            flex-shrink: 0;
+        }
+
+        #filter-bar-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #fff;
+            flex: 1;
+        }
+
+        #filter-bar-count {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.5);
+            flex-shrink: 0;
+        }
+
+        #filter-bar-clear {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            line-height: 1;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        #filter-bar-clear:active {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .p-card-chevron {
+            color: rgba(255, 255, 255, 0.25);
+            font-size: 12px;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+            padding: 4px;
+        }
+
+        .p-card.expanded .p-card-chevron {
+            transform: rotate(180deg);
+        }
+
+        .p-card-body {
+            display: none;
+            padding: 0 16px 18px 31px;
+        }
+
+        .p-card.expanded .p-card-body {
+            display: block;
+        }
+
+        .p-card-esv-label {
+            font-size: 9px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.25);
+            margin-bottom: 10px;
+        }
+
+        .p-card-context {
+            font-size: 13px;
+            line-height: 1.75;
+            color: rgba(255, 255, 255, 0.55);
+            background: rgba(255, 255, 255, 0.04);
+            border-left: 3px solid rgba(255, 255, 255, 0.15);
+            border-radius: 0 6px 6px 0;
+            padding: 10px 14px;
+            margin-bottom: 14px;
+            font-style: italic;
+        }
+
+        .p-card-text {
+            font-family: 'EB Garamond', serif;
+            font-size: 15.5px;
+            line-height: 1.85;
+            color: #ccd5e8;
+            white-space: pre-wrap;
+            margin-bottom: 14px;
+        }
+
+        .p-card-connection {
+            padding: 12px 14px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            font-size: 12.5px;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.55);
+        }
+
+        .p-card-connection strong {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* ── Divider ── */
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.08), transparent);
+            margin: 8px 24px 0;
+        }
+
+        /* ── Fixed bottom bar (mobile) ── */
+        #bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            background: rgba(7, 6, 15, 0.95);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #bottom-bar-label {
+            font-family: 'Cinzel', serif;
+            font-size: 9px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.3);
+            flex-shrink: 0;
+        }
+
+        #legend-dots {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .leg-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .leg-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        #expand-all-btn {
+            margin-left: auto;
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 6px;
+            color: rgba(255, 255, 255, 0.45);
+            font-size: 10px;
+            padding: 6px 12px;
+            cursor: pointer;
+            flex-shrink: 0;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            transition: color 0.15s, border-color 0.15s;
+            min-height: 32px;
+        }
+
+        #expand-all-btn:active {
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* ── Scroll-to-top ── */
+        #scroll-top {
+            position: fixed;
+            bottom: 68px;
+            right: 18px;
+            z-index: 60;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(7, 6, 15, 0.9);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: rgba(255, 255, 255, 0.45);
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        #scroll-top.visible {
+            opacity: 1;
+        }
+
+        /* ── Animation ── */
+        @keyframes fade-up {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-up {
+            opacity: 0;
+            animation: fade-up 0.5s ease forwards;
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="stars"></canvas>
+
+    <!-- ═══════════════ DESKTOP VIEW ═══════════════ -->
+    <div id="desktop-view">
+        <div id="map-wrap">
+            <div id="map">
+                <svg id="lines" xmlns="http://www.w3.org/2000/svg"></svg>
+                <!-- Nodes injected by JS -->
+            </div>
+        </div>
+
+        <!-- Left panel: Revelation text -->
+        <div id="center-panel">
+            <div class="panel-header-inner">
+                <div class="ph-label">The Sixth Seal</div>
+                <div class="ph-ref">Revelation 6:12–17</div>
+                <button class="ph-close" onclick="closeCenterPanel()">✕</button>
+            </div>
+            <div class="panel-body-inner">
+                <div class="rev-text">
+                    <sup class="verse-num">12</sup> When he opened the sixth seal, I looked, and behold, there was a <em
+                        class="rev-link" data-filter="earthquake quake">great earthquake</em>, and the <em
+                        class="rev-link" data-filter="sun dark">sun became black as sackcloth</em>, the <em
+                        class="rev-link" data-filter="moon blood">full moon became like blood</em>, <sup
+                        class="verse-num">13</sup> and the <em class="rev-link" data-filter="stars fall">stars of the
+                        sky fell to the earth</em> as the fig tree sheds its winter fruit when shaken by a gale. <sup
+                        class="verse-num">14</sup> The <em class="rev-link" data-filter="scroll sky heavens">sky
+                        vanished like a scroll that is being rolled up</em>, and every <em class="rev-link"
+                        data-filter="mountain scatter">mountain and island was removed from its place</em>.
+
+                    <sup class="verse-num">15</sup> Then the <em class="rev-link" data-filter="kings rulers">kings of
+                        the earth</em> and the great ones and the <em class="rev-link"
+                        data-filter="classes slave">generals and the rich and the powerful, and everyone, slave and
+                        free</em>, hid themselves in the <em class="rev-link" data-filter="mountain cave pit">caves and
+                        among the rocks of the mountains</em>, <sup class="verse-num">16</sup> calling to the mountains
+                    and rocks, <em class="rev-link" data-filter="wrath anger day">&ldquo;Fall on us and hide us from the
+                        face of him who is seated on the throne, and from the wrath of the Lamb,&rdquo;</em> <sup
+                        class="verse-num">17</sup> for the <em class="rev-link"
+                        data-filter="wrath day anger fierce">great day of their wrath has come</em>, and <em
+                        class="rev-link" data-filter="wrath day">who can stand?</em>
+                </div>
+                <div
+                    style="margin-top:24px;padding:14px 16px;border-radius:8px;background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.2);font-size:13px;line-height:1.75;color:rgba(255,255,255,0.55);">
+                    <strong style="color:rgba(249,115,22,0.9);">Click any node</strong> to explore the Old Testament
+                    texts that shape this vision. Each allusion carries centuries of prophetic weight.
+                </div>
+            </div>
+        </div>
+
+        <!-- Right panel: Passage detail -->
+        <div id="detail-panel">
+            <div id="panel-header">
+                <div id="panel-book"></div>
+                <div id="panel-ref"></div>
+                <div id="panel-themes"></div>
+                <button id="panel-close" onclick="closeDetailPanel()">✕</button>
+            </div>
+            <div id="panel-body">
+                <div id="panel-intro"></div>
+                <div id="panel-context"></div>
+                <div id="panel-text"></div>
+                <div id="panel-connection"></div>
+            </div>
+        </div>
+
+        <div id="zoom-controls">
+            <button onclick="adjustZoom(-0.1)">−</button>
+            <span id="zoom-label">100%</span>
+            <button onclick="adjustZoom(0.1)">+</button>
+        </div>
+
+        <div id="legend">
+            <div class="ltitle">Books</div>
+            <div class="litem">
+                <div class="ldot" style="background:var(--c-isaiah)"></div><span>Isaiah</span>
+            </div>
+            <div class="litem">
+                <div class="ldot" style="background:var(--c-ezekiel)"></div><span>Ezekiel</span>
+            </div>
+            <div class="litem">
+                <div class="ldot" style="background:var(--c-joel)"></div><span>Joel</span>
+            </div>
+            <div class="litem">
+                <div class="ldot" style="background:var(--c-hab)"></div><span>Habakkuk</span>
+            </div>
+            <div class="litem">
+                <div class="ldot" style="background:var(--c-allusion)"></div><span>Possible Allusions</span>
+            </div>
+            <div class="litem">
+                <div class="ldot" style="background:var(--c-nt)"></div><span>NT Echoes</span>
+            </div>
+        </div>
+
+        <div id="filter-chip">
+            <span id="filter-chip-prefix">Filter:</span>
+            <span id="filter-chip-label"></span>
+            <button id="filter-chip-clear" onclick="clearThemeFilter()" title="Clear filter">✕</button>
+        </div>
+
+        <div id="hint">
+            <span>Click center node → read Revelation text</span>
+            <span>Click highlighted phrases → filter by theme</span>
+            <span>Click any tag → fuzzy-filter passages</span>
+            <span>Scroll to zoom · drag to pan</span>
+        </div>
+    </div>
+
+    <!-- ═══════════════ MOBILE VIEW ═══════════════ -->
+    <div id="mobile-view">
+
+        <!-- Hero -->
+        <div id="hero" class="fade-up" style="animation-delay:0.05s">
+            <div id="hero-glow"></div>
+            <div id="hero-label">The Sixth Seal</div>
+            <div id="hero-ref">Revelation 6:12–17</div>
+            <div id="hero-title">Old Testament Allusions</div>
+            <div id="hero-tags">
+                <span class="hero-tag">earthquake</span>
+                <span class="hero-tag">sun as sackcloth</span>
+                <span class="hero-tag">moon to blood</span>
+                <span class="hero-tag">stars fall</span>
+                <span class="hero-tag">sky rolls up</span>
+                <span class="hero-tag">wrath of the Lamb</span>
+            </div>
+            <div id="rev-card">
+                <div class="rc-label">ESV · Full Text</div>
+                <div class="rc-text">
+                    <sup>12</sup> When he opened the sixth seal, I looked, and behold, there was a <em class="rev-link"
+                        data-filter="earthquake quake">great earthquake</em>, and the <em class="rev-link"
+                        data-filter="sun dark">sun became black as sackcloth</em>, the <em class="rev-link"
+                        data-filter="moon blood">full moon became like blood</em>, <sup>13</sup> and the <em
+                        class="rev-link" data-filter="stars fall">stars of the sky fell to the earth</em> as the fig
+                    tree sheds its winter fruit when shaken by a gale. <sup>14</sup> The <em class="rev-link"
+                        data-filter="scroll sky heavens">sky vanished like a scroll that is being rolled up</em>, and
+                    every <em class="rev-link" data-filter="mountain scatter">mountain and island was removed from its
+                        place</em>.<br><br>
+                    <sup>15</sup> Then the <em class="rev-link" data-filter="kings rulers">kings of the earth</em> and
+                    the great ones and the <em class="rev-link" data-filter="classes slave">generals and the rich and
+                        the powerful, and everyone, slave and free</em>, hid themselves in the <em class="rev-link"
+                        data-filter="mountain cave pit">caves and among the rocks of the mountains</em>, <sup>16</sup>
+                    calling to the mountains and rocks, <em class="rev-link" data-filter="wrath anger day">&ldquo;Fall
+                        on us and hide us from the face of him who is seated on the throne, and from the wrath of the
+                        Lamb,&rdquo;</em> <sup>17</sup> for the <em class="rev-link"
+                        data-filter="wrath day anger fierce">great day of their wrath has come</em>, and <em
+                        class="rev-link" data-filter="wrath day">who can stand?</em>
+                </div>
+            </div>
+        </div>
+
+        <!-- Passage sections injected by JS -->
+        <div id="sections"></div>
+
+        <!-- Filter bar -->
+        <div id="filter-bar">
+            <span id="filter-bar-prefix">Filter</span>
+            <span id="filter-bar-label"></span>
+            <span id="filter-bar-count"></span>
+            <button id="filter-bar-clear" onclick="clearThemeFilter()">✕</button>
+        </div>
+
+        <!-- Scroll to top -->
+        <button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+        <!-- Bottom legend bar -->
+        <div id="bottom-bar">
+            <div id="bottom-bar-label">Books</div>
+            <div id="legend-dots">
+                <div class="leg-item">
+                    <div class="leg-dot" style="background:#f59e0b"></div><span>Isaiah</span>
+                </div>
+                <div class="leg-item">
+                    <div class="leg-dot" style="background:#14b8a6"></div><span>Ezekiel</span>
+                </div>
+                <div class="leg-item">
+                    <div class="leg-dot" style="background:#4ade80"></div><span>Joel</span>
+                </div>
+                <div class="leg-item">
+                    <div class="leg-dot" style="background:#a78bfa"></div><span>Hab.</span>
+                </div>
+                <div class="leg-item">
+                    <div class="leg-dot" style="background:#94a3b8"></div><span>Poss.</span>
+                </div>
+                <div class="leg-item">
+                    <div class="leg-dot" style="background:#fbbf24"></div><span>NT</span>
+                </div>
+            </div>
+            <button id="expand-all-btn" onclick="toggleAll()">Expand All</button>
+        </div>
+
+    </div><!-- /mobile-view -->
+
+    <script>
+        // ═══════════════════════════════════════════════════════════
+        //  SHARED DATA
+        // ═══════════════════════════════════════════════════════════
+        const BOOKS = [
+            {
+                id: 'isaiah', label: 'Isaiah', color: '#f59e0b',
+                cx: 770, cy: 175,
+                passages: [
+                    {
+                        id: 'isa-13', ref: 'Isaiah 13:10–13', shortRef: '13:10–13',
+                        cx: 520, cy: 65,
+                        themes: ['sun darkened', 'moon withheld', 'heavens tremble', 'earth shaken', 'fierce anger'],
+                        context: `Part of an oracle announcing God's judgment on Babylon, this passage describes the "Day of the LORD" using cosmic darkening imagery to portray the collapse of political powers and divine wrath against the pride and wickedness of tyrants. Though rooted in Babylon's fall, it also foreshadows broader eschatological judgment.`,
+                        connection: 'The most direct cosmic-judgment parallel: sun and moon extinguished, heavens trembling and the earth shaken "out of its place" — identical imagery to the sixth seal.',
+                        text: `¹⁰ For the stars of the heavens and their constellations
+will not give their light;
+the sun will be dark at its rising,
+and the moon will not shed its light.
+¹¹ I will punish the world for its evil,
+and the wicked for their iniquity;
+I will put an end to the pomp of the arrogant,
+and lay low the pompous pride of the ruthless.
+¹² I will make people more rare than fine gold,
+and mankind than the gold of Ophir.
+¹³ Therefore I will make the heavens tremble,
+and the earth will be shaken out of its place,
+at the wrath of the LORD of hosts
+in the day of his fierce anger.`
+                    },
+                    {
+                        id: 'isa-24a', ref: 'Isaiah 24:1–6', shortRef: '24:1–6',
+                        cx: 685, cy: 38,
+                        themes: ['earth desolate', 'all classes judged', 'scattered', 'curse devours'],
+                        context: `Within "Isaiah's apocalypse" (chs. 24–27), this passage describes universal judgment upon the earth for humanity's rebellion, transgression of God's laws, and violation of the everlasting covenant. The devastation is cosmic in scope, portraying the earth defiled by bloodshed and only a remnant surviving.`,
+                        connection: 'The leveling of all social classes — king, slave, buyer, seller — mirrors Rev 6:15\'s catalog of "kings… generals… slaves and free." A universal judgment that spares no rank.',
+                        text: `¹ Behold, the LORD will empty the earth and make it desolate,
+and he will twist its surface and scatter its inhabitants.
+² And it shall be, as with the people, so with the priest;
+as with the slave, so with his master;
+as with the maid, so with her mistress;
+as with the buyer, so with the seller;
+as with the lender, so with the borrower;
+as with the creditor, so with the debtor.
+³ The earth shall be utterly empty and utterly plundered;
+for the LORD has spoken this word.
+⁴ The earth mourns and withers;
+the world languishes and withers;
+the highest people of the earth languish.
+⁵ The earth lies defiled under its inhabitants;
+for they have transgressed the laws,
+violated the statutes,
+broken the everlasting covenant.
+⁶ Therefore a curse devours the earth,
+and its inhabitants suffer for their guilt;
+therefore the inhabitants of the earth are scorched,
+and few men are left.`
+                    },
+                    {
+                        id: 'isa-24b', ref: 'Isaiah 24:19–23', shortRef: '24:19–23',
+                        cx: 870, cy: 38,
+                        themes: ['earth broken', 'kings judged', 'moon confounded', 'sun ashamed', 'LORD reigns'],
+                        context: `Within "Isaiah's apocalypse" (chs. 24–27), this passage describes universal judgment upon the earth for humanity's rebellion, transgression of God's laws, and violation of the everlasting covenant. The devastation is cosmic in scope, portraying the earth defiled by bloodshed and only a remnant surviving.`,
+                        connection: 'Earth shattered and kings imprisoned match the sixth seal\'s cosmic upheaval and the hiding of the mighty. The moon "confounded" and sun "ashamed" amplify the darkening imagery.',
+                        text: `¹⁹ The earth is utterly broken,
+the earth is split apart,
+the earth is violently shaken.
+²⁰ The earth staggers like a drunken man;
+it sways like a hut;
+its transgression lies heavy upon it,
+and it falls, and will not rise again.
+²¹ On that day the LORD will punish
+the host of heaven, in heaven,
+and the kings of the earth, on the earth.
+²² They will be gathered together
+as prisoners in a pit;
+they will be shut up in a prison,
+and after many days they will be punished.
+²³ Then the moon will be confounded
+and the sun ashamed,
+for the LORD of hosts reigns
+on Mount Zion and in Jerusalem,
+and his glory will be before his elders.`
+                    },
+                    {
+                        id: 'isa-34', ref: 'Isaiah 34:4', shortRef: '34:4',
+                        cx: 1030, cy: 65,
+                        themes: ['sky rolls up like scroll', 'stars fall', 'fig tree'],
+                        context: `In a prophetic oracle against the nations—especially Edom—this verse summons all nations to judgment and depicts heavenly disintegration as a sign of divine wrath against idolatrous powers. Edom represents the ungodly nations opposed to God and His people.`,
+                        connection: 'The most verbally precise parallel: "the skies roll up like a scroll" and "leaves fall from the fig tree" appear almost word-for-word in Rev 6:13–14.',
+                        text: `⁴ All the host of heaven shall rot away,
+and the skies roll up like a scroll.
+All their host shall fall,
+as leaves fall from the vine,
+like leaves falling from the fig tree.`
+                    },
+                ]
+            },
+            {
+                id: 'ezekiel', label: 'Ezekiel', color: '#14b8a6',
+                cx: 1195, cy: 295,
+                passages: [
+                    {
+                        id: 'ezek-32', ref: 'Ezekiel 32:6–8', shortRef: '32:6–8',
+                        cx: 1390, cy: 210,
+                        themes: ['blood', 'stars darkened', 'sun covered', 'moon withheld', 'darkness over land'],
+                        context: `Delivered in 585 BC after Jerusalem's fall, this lament announces God's judgment on Pharaoh and Egypt using imagery recalling the Exodus plagues, including blood and darkness. The cosmic darkening signifies the downfall of Egypt's power and serves as a warning to surrounding nations.`,
+                        connection: 'Blood, darkened stars, a veiled sun, and a moon robbed of its light: the language of Ezekiel\'s oracle against Egypt reappears in John\'s vision of the sixth seal — judgment as cosmic night.',
+                        text: `⁶ I will drench the land even to the mountains with your flowing blood,
+and the ravines will be full of you.
+⁷ When I blot you out, I will cover the heavens
+and make their stars dark;
+I will cover the sun with a cloud,
+and the moon shall not give its light.
+⁸ All the bright lights of heaven
+will I make dark over you,
+and put darkness on your land,
+declares the Lord GOD.`
+                    },
+                ]
+            },
+            {
+                id: 'joel', label: 'Joel', color: '#4ade80',
+                cx: 1195, cy: 665,
+                passages: [
+                    {
+                        id: 'joel-2-10', ref: 'Joel 2:10', shortRef: '2:10',
+                        cx: 1390, cy: 555,
+                        themes: ['earth quakes', 'heavens tremble', 'sun & moon dark', 'stars withdraw'],
+                        context: `Written in the aftermath of a devastating locust plague in Judah, Joel presents the disaster as both a call to repentance and a foreshadowing of the coming "Day of the Lord," when God will judge the nations. The book moves from judgment to restoration, promising renewal for those who call upon the Lord. These verses describe cosmic disturbances—darkened sun, moon, and stars—as signs of the Day of the Lord, portraying God's approach as divine Warrior and Judge. The imagery draws from established prophetic tradition and forms part of the foundation for later apocalyptic language.`,
+                        connection: 'Joel\'s Day-of-the-LORD army is heralded by the same cosmic signs: earthquake, trembling heavens, darkened sun and moon — the seventh seal\'s prelude in the sixth.',
+                        text: `¹⁰ The earth quakes before them;
+the heavens tremble.
+The sun and the moon are darkened,
+and the stars withdraw their shining.`
+                    },
+                    {
+                        id: 'joel-2-31', ref: 'Joel 2:30–31', shortRef: '2:30–31',
+                        cx: 1420, cy: 670,
+                        themes: ['blood', 'fire', 'smoke', 'sun to darkness', 'moon to blood', 'great day of LORD'],
+                        context: `Written in the aftermath of a devastating locust plague in Judah, Joel presents the disaster as both a call to repentance and a foreshadowing of the coming "Day of the Lord," when God will judge the nations. The book moves from judgment to restoration, promising renewal for those who call upon the Lord. These verses describe cosmic disturbances—darkened sun, moon, and stars—as signs of the Day of the Lord, portraying God's approach as divine Warrior and Judge. The imagery draws from established prophetic tradition and forms part of the foundation for later apocalyptic language.`,
+                        connection: '"The moon to blood" before "the great and awesome day of the LORD" is the sharpest verbal echo: John\'s moon like blood (v. 12) and "the great day of their wrath" (v. 17).',
+                        text: `³⁰ "And I will show wonders in the heavens and on the earth, blood and fire and columns of smoke.
+³¹ The sun shall be turned to darkness, and the moon to blood,
+before the great and awesome day of the LORD comes.`
+                    },
+                    {
+                        id: 'joel-3-15', ref: 'Joel 3:15–16', shortRef: '3:15–16',
+                        cx: 1390, cy: 785,
+                        themes: ['sun & moon dark', 'stars withdraw', 'heavens & earth quake', 'LORD roars'],
+                        context: `Written in the aftermath of a devastating locust plague in Judah, Joel presents the disaster as both a call to repentance and a foreshadowing of the coming "Day of the Lord," when God will judge the nations. The book moves from judgment to restoration, promising renewal for those who call upon the Lord. These verses describe cosmic disturbances—darkened sun, moon, and stars—as signs of the Day of the Lord, portraying God's approach as divine Warrior and Judge. The imagery draws from established prophetic tradition and forms part of the foundation for later apocalyptic language.`,
+                        connection: 'The cosmic darkness accompanies the LORD\'s roaring judgment — cosmic signs as the mode of divine arrival, repeated in John\'s assemblage of sixth-seal imagery.',
+                        text: `¹⁵ The sun and the moon are darkened,
+and the stars withdraw their shining.
+¹⁶ The LORD roars from Zion,
+and utters his voice from Jerusalem,
+and the heavens and the earth quake.
+But the LORD is a refuge to his people,
+a stronghold to the people of Israel.`
+                    },
+                ]
+            },
+            {
+                id: 'habakkuk', label: 'Habakkuk', color: '#a78bfa',
+                cx: 770, cy: 785,
+                passages: [
+                    {
+                        id: 'hab-3', ref: 'Habakkuk 3:6–11', shortRef: '3:6–11',
+                        cx: 620, cy: 900,
+                        themes: ['mountains scattered', 'earth shaken', 'nations shaken', 'sun & moon still', 'arrows of wrath'],
+                        context: `Part of a theophany recalling the Exodus and Sinai, this passage describes creation trembling at God's presence—mountains quaking, waters roaring, sun and moon standing still. The cosmic upheaval reflects God's sovereign power and transforms the prophet's perspective from lament to confidence.`,
+                        connection: 'God\'s theophanic march: eternal mountains scattered, nations shaken — the earth unmade before divine wrath. The sixth seal recasts this ancient theophany in apocalyptic register.',
+                        text: `⁶ He stood and measured the earth;
+he looked and shook the nations;
+then the eternal mountains were scattered;
+the everlasting hills sank low.
+His were the everlasting ways.
+⁷ I saw the tents of Cushan in affliction;
+the curtains of the land of Midian did tremble.
+⁸ Was your wrath against the rivers, O LORD?
+Was your anger against the rivers,
+or your indignation against the sea,
+when you rode on your horses,
+on your chariot of salvation?
+⁹ You stripped the sheath from your bow,
+calling for many arrows. Selah
+You split the earth with rivers.
+¹⁰ The mountains saw you and writhed;
+the raging waters swept on;
+the deep gave forth its voice;
+it lifted its hands on high.
+¹¹ The sun and moon stood still in their place
+at the light of your arrows as they sped,
+at the flash of your glittering spear.`
+                    },
+                ]
+            },
+            {
+                id: 'allusions', label: 'Possible Allusions', color: '#94a3b8',
+                cx: 345, cy: 665,
+                passages: [
+                    {
+                        id: 'amos-8', ref: 'Amos 8:8–9', shortRef: 'Amos 8:8–9',
+                        cx: 145, cy: 830,
+                        themes: ['land trembles', 'sun goes down at noon', 'earth darkened', 'all mourn'],
+                        context: `Within a judgment oracle against Israel's social injustice and corruption, these verses portray earthquake and solar darkening as signs of the coming Day of the Lord. The imagery symbolizes divine reversal, where Israel's sinful order collapses under God's judgment.`,
+                        connection: 'Amos\'s judgment-oracle uses the same language of cosmic disruption — land trembling, midday sun extinguished. A possible background text identified by Beale.',
+                        text: `⁸ Shall not the land tremble on this account,
+and everyone mourn who dwells in it,
+and all of it rise like the Nile,
+and be tossed about and sink again, like the Nile of Egypt?"
+⁹ "And on that day," declares the Lord GOD,
+"I will make the sun go down at noon
+and darken the earth in broad daylight."`
+                    },
+                    {
+                        id: 'jer-4', ref: 'Jeremiah 4:23–28', shortRef: 'Jeremiah 4:23–28',
+                        cx: 95, cy: 665,
+                        themes: ['without form & void', 'no light', 'mountains quaking', 'fierce anger', 'earth mourns', 'heavens dark'],
+                        context: `This vision of judgment against Judah uses "un-creation" language from Genesis to depict the land returning to chaos under God's fierce anger. Though announcing devastation, it preserves hope through God's promise not to destroy the land completely.`,
+                        connection: 'Jeremiah\'s vision of un-creation — earth formless and void, heavens lightless, mountains quaking — echoes Genesis and anticipates John\'s sixth-seal reversal of creation order.',
+                        text: `²³ I looked on the earth, and behold, it was without form and void;
+and to the heavens, and they had no light.
+²⁴ I looked on the mountains, and behold, they were quaking,
+and all the hills moved to and fro.
+²⁵ I looked, and behold, there was no man,
+and all the birds of the air had fled.
+²⁶ I looked, and behold, the fruitful land was a desert,
+and all its cities were laid in ruins
+before the LORD, before his fierce anger.
+²⁷ For thus says the LORD, "The whole land shall be a desolation;
+yet I will not make a full end.
+²⁸ For this the earth shall mourn,
+and the heavens above be dark;
+for I have spoken; I have purposed;
+I have not relented, nor will I turn back."`
+                    },
+                    {
+                        id: 'ps-68', ref: 'Psalm 68:7–8', shortRef: 'Psalm 68:7–8',
+                        cx: 145, cy: 500,
+                        themes: ['earth quaked', 'heavens poured rain', 'God of Sinai', 'theophany'],
+                        context: `Recounting God's leadership of Israel through the wilderness, these verses describe earth shaking and heavens pouring rain as signs of His presence at Sinai. The imagery emphasizes God's sovereign movement with His people from wilderness to Zion.`,
+                        connection: 'The Sinai theophany as archetype: earth quaking and heavens responding to God\'s presence. The sixth seal is the eschatological Sinai — the final, ultimate meeting of God and world.',
+                        text: `⁷ O God, when you went out before your people,
+when you marched through the wilderness, Selah
+⁸ the earth quaked, the heavens poured down rain,
+before God, the One of Sinai,
+before God, the God of Israel.`
+                    },
+                ]
+            },
+            {
+                id: 'nt', label: 'NT Echoes', color: '#fbbf24',
+                cx: 345, cy: 295,
+                passages: [
+                    {
+                        id: 'matt-24', ref: 'Matthew 24:29', shortRef: 'Matthew 24:29',
+                        cx: 135, cy: 175,
+                        themes: ['sun darkened', 'moon withheld', 'stars fall', 'powers shaken', 'after tribulation'],
+                        context: `In Jesus' discourse on Jerusalem's destruction and future events, this verse uses apocalyptic imagery drawn from Isaiah to describe cosmic upheaval following tribulation. Interpretations differ on whether it refers to first-century events, Christ's final return, or both.`,
+                        connection: 'Jesus directly quotes this cluster of OT texts (Isaiah, Joel) in his Olivet Discourse — confirming the apocalyptic-prophetic tradition that John also draws on in the sixth seal.',
+                        text: `²⁹ "Immediately after the tribulation of those days the sun will be darkened, and the moon will not give its light, and the stars will fall from heaven, and the powers of the heavens will be shaken.`
+                    },
+                    {
+                        id: 'mark-13', ref: 'Mark 13:24–25', shortRef: 'Mark 13:24–25',
+                        cx: 85, cy: 320,
+                        themes: ['sun darkened', 'moon withheld', 'stars falling', 'powers shaken'],
+                        context: `Within Jesus' end-times discourse, these verses describe cosmic darkening and falling stars immediately after tribulation, contrasting false messiahs with the true coming of the Son of Man. The language draws heavily from Old Testament prophetic imagery and precedes Christ's visible return.`,
+                        connection: 'Mark\'s parallel to Matthew 24:29 — the same OT cosmic-judgment language in Jesus\'s eschatological discourse, forming the bridge between the prophets and the Apocalypse.',
+                        text: `²⁴ "But in those days, after that tribulation, the sun will be darkened, and the moon will not give its light,
+²⁵ and the stars will be falling from heaven, and the powers in the heavens will be shaken.`
+                    },
+                    {
+                        id: 'acts-2', ref: 'Acts 2:19–20', shortRef: 'Acts 2:19–20 (Joel 2:30–31)',
+                        cx: 185, cy: 415,
+                        themes: ['blood fire smoke', 'sun to darkness', 'moon to blood', 'day of the Lord'],
+                        context: `Quoted by Peter at Pentecost from Joel, these verses describe cosmic signs preceding the Day of the Lord and frame the outpouring of the Spirit as occurring in "the last days." The imagery reflects themes of divine theophany and judgment within an eschatological context.`,
+                        connection: 'Peter quotes Joel at Pentecost, declaring the "last days" have begun. Revelation\'s sixth seal revisits the same Joel text, showing the end-time convergence of Day-of-the-Lord imagery.',
+                        text: `¹⁹ 'And I will show wonders in the heavens above
+and signs on the earth below,
+blood, and fire, and vapor of smoke;
+²⁰ the sun shall be turned to darkness
+and the moon to blood,
+before the day of the Lord comes, the great and magnificent day.'`
+                    },
+                ]
+            },
+        ];
+
+        // ═══════════════════════════════════════════════════════════
+        //  SHARED UTILITIES
+        // ═══════════════════════════════════════════════════════════
+        function escapeHtml(str) {
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
+        const STOP = new Set(['to', 'the', 'a', 'an', 'and', 'of', 'at', 'in', 'on', 'from', 'their', 'its', 'like', 'as', 'with', 'has', 'not', 'for', 'our', 'who', 'us', 'him', 'all', 'they', 'will', 'over', 'your', 'you', 'his']);
+        function extractKeywords(str) {
+            return str.toLowerCase()
+                .replace(/[\u201c\u201d\u2018\u2019\u201a\u201b"'.,!?;:]/g, ' ')
+                .split(/[\s\-&\/+]+/)
+                .filter(w => w.length > 2 && !STOP.has(w));
+        }
+        function passageMatchesFilter(passage, keywords) {
+            const allThemes = passage.themes.join(' ').toLowerCase();
+            return keywords.some(kw => allThemes.includes(kw));
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        //  SHARED STARFIELD
+        // ═══════════════════════════════════════════════════════════
+        function initStars() {
+            const canvas = document.getElementById('stars');
+            const ctx = canvas.getContext('2d');
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            const FPS = 24, FRAME_MS = 1000 / FPS;
+
+            let LW, LH;
+            function resize() {
+                LW = window.innerWidth; LH = window.innerHeight;
+                canvas.width = LW * dpr; canvas.height = LH * dpr;
+                canvas.style.width = LW + 'px'; canvas.style.height = LH + 'px';
+            }
+            resize();
+
+            const COUNT = Math.min(180, Math.round((LW * LH) / 8000));
+            const stars = Array.from({ length: COUNT }, () => ({
+                x: Math.random() * LW,
+                y: Math.random() * LH,
+                r: Math.random() * 1.4,
+                a: Math.random(),
+                speed: 0.003 + Math.random() * 0.008,
+                phase: Math.random() * Math.PI * 2
+            }));
+
+            let t = 0, rafId = null, running = true, lastTime = 0;
+
+            // Pre-allocate buckets once to avoid GC pressure each frame
+            const BUCKETS = 8;
+            const buckets = Array.from({ length: BUCKETS }, () => []);
+
+            function draw(now) {
+                if (!running) return;
+                if (now - lastTime < FRAME_MS) { rafId = requestAnimationFrame(draw); return; }
+                lastTime = now;
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                ctx.clearRect(0, 0, LW, LH);
+                t += 0.016;
+                ctx.fillStyle = '#fff';
+
+                // Group stars by quantized alpha — reduces fill() calls from N to BUCKETS
+                buckets.forEach(b => b.length = 0);
+                stars.forEach(s => {
+                    const alpha = s.a * (0.5 + 0.5 * Math.sin(t * s.speed * 60 + s.phase));
+                    buckets[Math.min(BUCKETS - 1, alpha * BUCKETS | 0)].push(s, alpha);
+                });
+                buckets.forEach((b, bi) => {
+                    if (!b.length) return;
+                    ctx.globalAlpha = (bi + 0.5) / BUCKETS;
+                    ctx.beginPath();
+                    for (let i = 0; i < b.length; i += 2) {
+                        const s = b[i];
+                        ctx.moveTo(s.x + s.r, s.y);
+                        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                    }
+                    ctx.fill();
+                });
+                ctx.globalAlpha = 1;
+                rafId = requestAnimationFrame(draw);
+            }
+            rafId = requestAnimationFrame(draw);
+
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    running = false;
+                    if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+                } else {
+                    running = true;
+                    lastTime = 0;
+                    rafId = requestAnimationFrame(draw);
+                }
+            });
+
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(resize, 150);
+            }, { passive: true });
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        //  DETECT LAYOUT
+        // ═══════════════════════════════════════════════════════════
+        const isDesktop = window.matchMedia('(min-width: 768px)').matches;
+
+        // ═══════════════════════════════════════════════════════════
+        //  DESKTOP LOGIC
+        // ═══════════════════════════════════════════════════════════
+        if (isDesktop) {
+            const W = 1540, H = 960, CX = 770, CY = 480;
+
+            function makeLine(svg, x1, y1, x2, y2, color, cls) {
+                const len = Math.hypot(x2 - x1, y2 - y1);
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', x1); line.setAttribute('y1', y1);
+                line.setAttribute('x2', x2); line.setAttribute('y2', y2);
+                line.setAttribute('stroke', color);
+                line.setAttribute('class', cls);
+                line.style.strokeDasharray = len;
+                line.style.strokeDashoffset = len;
+                svg.appendChild(line);
+            }
+
+            function makeNode(map, id, x, y, html, cls) {
+                const div = document.createElement('div');
+                div.className = 'node ' + cls;
+                div.id = 'node-' + id;
+                div.style.left = x + 'px';
+                div.style.top = y + 'px';
+                div.innerHTML = html;
+                map.appendChild(div);
+                return div;
+            }
+
+            function buildMap() {
+                const map = document.getElementById('map');
+                const svg = document.getElementById('lines');
+
+                // Center node
+                const cDiv = document.createElement('div');
+                cDiv.className = 'node';
+                cDiv.id = 'node-center';
+                cDiv.style.left = CX + 'px';
+                cDiv.style.top = CY + 'px';
+                cDiv.innerHTML = `
+      <div onclick="openCenterPanel()">
+        <div class="ref">Revelation</div>
+        <div class="sub">6:12–17</div>
+        <div class="title">The Sixth Seal</div>
+        <div class="hint">earthquake · sun black<br>moon to blood · stars fall<br>sky rolls up · wrath</div>
+      </div>`;
+                map.appendChild(cDiv);
+
+                BOOKS.forEach(book => {
+                    makeLine(svg, CX, CY, book.cx, book.cy, book.color, 'line-main');
+
+                    const bHtml = `<div class="shell" style="border-color:${book.color};color:${book.color};--book-color:${book.color}">${book.label}</div>`;
+                    const bDiv = makeNode(map, book.id, book.cx, book.cy, bHtml, 'node-book');
+
+                    book.passages.forEach(p => {
+                        makeLine(svg, book.cx, book.cy, p.cx, p.cy, book.color, 'line-sub');
+
+                        const themeHtml = p.themes.slice(0, 3).map(t =>
+                            `<span class="theme-badge" onclick="event.stopPropagation();setThemeFilter('${t.replace(/'/g, '&#39;')}')" style="background:${book.color}22;color:${book.color};border:1px solid ${book.color}44">${t}</span>`
+                        ).join('');
+
+                        const pHtml = `<div class="shell" style="border-color:${book.color}88;color:#e2e8f0;--book-color:${book.color}">
+          <span class="ref-label" style="color:${book.color}">${p.shortRef}</span>
+          ${themeHtml}
+        </div>`;
+                        const pDiv = makeNode(map, p.id, p.cx, p.cy, pHtml, 'node-passage');
+                        pDiv.classList.add('unseen');
+                        pDiv.addEventListener('click', e => { e.stopPropagation(); openDetail(book, p); });
+                    });
+                });
+            }
+
+            let activePassageId = null, activeBookId = null;
+
+            function openDetail(book, passage) {
+                if (activePassageId) {
+                    const prev = document.getElementById('node-' + activePassageId);
+                    if (prev) prev.classList.remove('active');
+                }
+                if (activeBookId) {
+                    const prevBook = document.getElementById('node-' + activeBookId);
+                    if (prevBook) prevBook.classList.remove('book-active');
+                }
+                activePassageId = passage.id;
+                activeBookId = book.id;
+
+                const pNode = document.getElementById('node-' + passage.id);
+                if (pNode) { pNode.classList.add('active'); pNode.classList.remove('unseen'); }
+                const bookNode = document.getElementById('node-' + book.id);
+                if (bookNode) bookNode.classList.add('book-active');
+
+                document.getElementById('panel-book').textContent = book.label;
+                const refEl = document.getElementById('panel-ref');
+                refEl.textContent = passage.ref;
+                refEl.style.color = book.color;
+
+                document.getElementById('panel-themes').innerHTML = passage.themes.map(t =>
+                    `<span class="ptag" style="color:${book.color};border-color:${book.color}66;background:${book.color}18">${t}</span>`
+                ).join('');
+
+                document.getElementById('panel-intro').textContent = 'ESV';
+                const ctxEl = document.getElementById('panel-context');
+                if (passage.context) {
+                    ctxEl.textContent = passage.context;
+                    ctxEl.style.display = '';
+                    ctxEl.style.borderColor = book.color + '55';
+                } else {
+                    ctxEl.style.display = 'none';
+                }
+                document.getElementById('panel-text').textContent = passage.text;
+                const connEl = document.getElementById('panel-connection');
+                connEl.innerHTML = `<strong>Connection to Rev 6:12–17:</strong> ${passage.connection}`;
+                connEl.style.borderColor = book.color + '33';
+
+                document.getElementById('detail-panel').classList.add('open');
+            }
+
+            function closeDetailPanel() {
+                document.getElementById('detail-panel').classList.remove('open');
+                if (activePassageId) {
+                    const prev = document.getElementById('node-' + activePassageId);
+                    if (prev) prev.classList.remove('active');
+                    activePassageId = null;
+                }
+                if (activeBookId) {
+                    const prevBook = document.getElementById('node-' + activeBookId);
+                    if (prevBook) prevBook.classList.remove('book-active');
+                    activeBookId = null;
+                }
+            }
+
+            function openCenterPanel() {
+                document.getElementById('center-panel').classList.add('open');
+            }
+            function closeCenterPanel() {
+                document.getElementById('center-panel').classList.remove('open');
+            }
+
+            // Theme filter (desktop)
+            let activeFilterLabel = null, activeFilterKeywords = [];
+
+            function setThemeFilter(label, overrideKeywords) {
+                const keywords = overrideKeywords || extractKeywords(label);
+                if (activeFilterLabel === label) { clearThemeFilter(); return; }
+                activeFilterLabel = label;
+                activeFilterKeywords = keywords;
+
+                document.getElementById('filter-chip-label').textContent = label;
+                document.getElementById('filter-chip').classList.add('active');
+
+                BOOKS.forEach(book => {
+                    let bookHasMatch = false;
+                    book.passages.forEach(p => {
+                        const node = document.getElementById('node-' + p.id);
+                        if (!node) return;
+                        const match = passageMatchesFilter(p, keywords);
+                        node.classList.toggle('filter-dim', !match);
+                        node.classList.toggle('filter-match', match);
+                        if (match) bookHasMatch = true;
+                    });
+                    const bookNode = document.getElementById('node-' + book.id);
+                    if (bookNode) bookNode.classList.toggle('filter-dim', !bookHasMatch);
+                });
+
+                document.querySelectorAll('.theme-badge').forEach(b => {
+                    const bKw = extractKeywords(b.textContent);
+                    b.classList.toggle('filter-active', bKw.some(k => keywords.includes(k)));
+                });
+                document.querySelectorAll('.rev-link').forEach(el => {
+                    const elKw = el.dataset.filter ? el.dataset.filter.split(' ') : extractKeywords(el.textContent);
+                    el.classList.toggle('rev-filter-active', elKw.some(k => keywords.includes(k)));
+                });
+            }
+
+            function clearThemeFilter() {
+                activeFilterLabel = null;
+                activeFilterKeywords = [];
+                document.getElementById('filter-chip').classList.remove('active');
+                BOOKS.forEach(book => {
+                    book.passages.forEach(p => {
+                        const node = document.getElementById('node-' + p.id);
+                        if (node) node.classList.remove('filter-dim', 'filter-match');
+                    });
+                    const bookNode = document.getElementById('node-' + book.id);
+                    if (bookNode) bookNode.classList.remove('filter-dim');
+                });
+                document.querySelectorAll('.theme-badge').forEach(b => b.classList.remove('filter-active'));
+                document.querySelectorAll('.rev-link').forEach(el => el.classList.remove('rev-filter-active'));
+            }
+
+            // Zoom & Pan
+            let zoom = 0.75, panX = 0, panY = 0;
+
+            function applyTransform() {
+                document.getElementById('map').style.transform =
+                    `translate(calc(-50% + ${panX}px), calc(-50% + ${panY}px)) scale(${zoom})`;
+                document.getElementById('zoom-label').textContent = Math.round(zoom * 100) + '%';
+            }
+            function setZoom(z) { zoom = Math.max(0.3, Math.min(1.8, z)); applyTransform(); }
+            function adjustZoom(delta) { setZoom(zoom + delta); }
+
+            document.getElementById('map-wrap').addEventListener('wheel', e => {
+                e.preventDefault();
+                adjustZoom(e.deltaY < 0 ? 0.06 : -0.06);
+            }, { passive: false });
+
+            const mw = document.getElementById('map-wrap');
+            let drag = false, dx, dy, px, py, didMove = false;
+            mw.addEventListener('mousedown', e => {
+                if (e.button !== 0 || e.target.closest('.node') || e.target.closest('#detail-panel') || e.target.closest('#center-panel')) return;
+                drag = true; didMove = false;
+                dx = e.clientX; dy = e.clientY; px = panX; py = panY;
+                mw.classList.add('dragging');
+            });
+            window.addEventListener('mousemove', e => {
+                if (!drag) return;
+                const mx = e.clientX - dx, my = e.clientY - dy;
+                if (Math.abs(mx) > 3 || Math.abs(my) > 3) didMove = true;
+                panX = px + mx; panY = py + my;
+                applyTransform();
+            });
+            window.addEventListener('mouseup', () => { drag = false; mw.classList.remove('dragging'); });
+
+            mw.addEventListener('click', e => {
+                if (didMove) { didMove = false; return; }
+                if (e.target === mw || e.target === document.getElementById('map')) {
+                    closeCenterPanel();
+                    closeDetailPanel();
+                }
+            });
+
+            document.addEventListener('keydown', e => {
+                if (e.key === 'Escape') { closeCenterPanel(); closeDetailPanel(); clearThemeFilter(); }
+            });
+
+            document.addEventListener('click', e => {
+                const el = e.target.closest('.rev-link');
+                if (!el) return;
+                e.stopPropagation();
+                const kw = el.dataset.filter ? el.dataset.filter.split(' ') : null;
+                setThemeFilter(el.textContent.trim().replace(/[\u201c\u201d"]/g, ''), kw);
+            });
+
+            // Init desktop
+            buildMap();
+            initStars();
+            requestAnimationFrame(() => {
+                setZoom(0.75);
+                setTimeout(() => {
+                    document.querySelectorAll('#lines line').forEach((l, i) => {
+                        l.style.transition = `stroke-dashoffset 0.9s cubic-bezier(.4,0,.2,1) ${i * 0.07}s`;
+                        l.style.strokeDashoffset = '0';
+                    });
+                }, 120);
+            });
+
+            // ═══════════════════════════════════════════════════════════
+            //  MOBILE LOGIC
+            // ═══════════════════════════════════════════════════════════
+        } else {
+
+            function buildSections() {
+                const container = document.getElementById('sections');
+                BOOKS.forEach((book, bi) => {
+                    const section = document.createElement('div');
+                    section.className = 'fade-up';
+                    section.style.animationDelay = (0.1 + bi * 0.07) + 's';
+
+                    const header = document.createElement('div');
+                    header.className = 'section-header';
+                    header.innerHTML = `
+        <div class="sh-dot" style="background:${book.color};--dot-color:${book.color}"></div>
+        <div class="sh-label" style="color:${book.color}">${book.label}</div>
+        <div class="sh-count">${book.passages.length} passage${book.passages.length > 1 ? 's' : ''}</div>
+      `;
+                    section.appendChild(header);
+
+                    const cards = document.createElement('div');
+                    cards.className = 'passage-cards';
+
+                    book.passages.forEach(p => {
+                        const card = document.createElement('div');
+                        card.className = 'p-card';
+                        card.id = 'card-' + p.id;
+                        card.style.setProperty('--card-color', book.color);
+                        card.style.setProperty('--badge-border', book.color + '44');
+                        card.style.setProperty('--badge-bg', book.color + '18');
+
+                        const themeHtml = p.themes.map(t =>
+                            `<span class="p-theme-badge" onclick="event.stopPropagation();setThemeFilter('${t.replace(/'/g, '&#39;')}')">${t}</span>`
+                        ).join('');
+
+                        card.innerHTML = `
+          <div class="p-card-header" onclick="toggleCard('${p.id}')">
+            <div class="p-card-accent"></div>
+            <div class="p-card-title">
+              <div class="p-card-ref">${p.ref}</div>
+              <div class="p-card-themes">${themeHtml}</div>
+            </div>
+            <div class="p-card-chevron">▾</div>
+          </div>
+          <div class="p-card-body" id="body-${p.id}">
+            <div class="p-card-esv-label">ESV</div>
+            ${p.context ? `<div class="p-card-context" style="border-color:${book.color}55">${escapeHtml(p.context)}</div>` : ''}
+            <div class="p-card-text">${escapeHtml(p.text)}</div>
+            <div class="p-card-connection" style="border-color:${book.color}33">
+              <strong style="color:${book.color}">Connection to Rev 6:12–17:</strong> ${p.connection}
+            </div>
+          </div>
+        `;
+                        cards.appendChild(card);
+                    });
+
+                    section.appendChild(cards);
+
+                    if (bi < BOOKS.length - 1) {
+                        const divider = document.createElement('div');
+                        divider.className = 'section-divider';
+                        section.appendChild(divider);
+                    }
+
+                    container.appendChild(section);
+                });
+            }
+
+            function toggleCard(id) {
+                const card = document.getElementById('card-' + id);
+                const body = document.getElementById('body-' + id);
+                const isOpen = card.classList.contains('expanded');
+                card.classList.toggle('expanded', !isOpen);
+                body.style.display = isOpen ? 'none' : 'block';
+            }
+
+            // Theme filter (mobile)
+            let activeFilterLabel = null, activeFilterKeywords = [];
+
+            function setThemeFilter(label, overrideKeywords) {
+                const keywords = overrideKeywords || extractKeywords(label);
+                if (activeFilterLabel === label) { clearThemeFilter(); return; }
+                activeFilterLabel = label;
+                activeFilterKeywords = keywords;
+
+                let matchCount = 0;
+                BOOKS.forEach(book => {
+                    book.passages.forEach(p => {
+                        const card = document.getElementById('card-' + p.id);
+                        if (!card) return;
+                        const match = passageMatchesFilter(p, keywords);
+                        card.classList.toggle('filter-dim', !match);
+                        card.classList.toggle('filter-match', match);
+                        if (match) matchCount++;
+                    });
+                });
+
+                document.querySelectorAll('.p-theme-badge').forEach(b => {
+                    const bKw = extractKeywords(b.textContent);
+                    b.classList.toggle('filter-active', bKw.some(k => keywords.includes(k)));
+                });
+                document.querySelectorAll('.rev-link').forEach(el => {
+                    const elKw = el.dataset.filter ? el.dataset.filter.split(' ') : extractKeywords(el.textContent);
+                    el.classList.toggle('rev-filter-active', elKw.some(k => keywords.includes(k)));
+                });
+
+                const bar = document.getElementById('filter-bar');
+                document.getElementById('filter-bar-label').textContent = label;
+                document.getElementById('filter-bar-count').textContent = matchCount + ' match' + (matchCount !== 1 ? 'es' : '');
+                bar.style.display = 'flex';
+                requestAnimationFrame(() => bar.classList.add('active'));
+            }
+
+            function clearThemeFilter() {
+                activeFilterLabel = null;
+                activeFilterKeywords = [];
+                BOOKS.forEach(book => {
+                    book.passages.forEach(p => {
+                        const card = document.getElementById('card-' + p.id);
+                        if (card) card.classList.remove('filter-dim', 'filter-match');
+                    });
+                });
+                document.querySelectorAll('.p-theme-badge').forEach(b => b.classList.remove('filter-active'));
+                document.querySelectorAll('.rev-link').forEach(el => el.classList.remove('rev-filter-active'));
+                const bar = document.getElementById('filter-bar');
+                bar.classList.remove('active');
+                setTimeout(() => { bar.style.display = 'none'; }, 300);
+            }
+
+            let allExpanded = false;
+            function toggleAll() {
+                allExpanded = !allExpanded;
+                document.querySelectorAll('.p-card').forEach(card => {
+                    const id = card.id.replace('card-', '');
+                    const body = document.getElementById('body-' + id);
+                    if (!body) return;
+                    card.classList.toggle('expanded', allExpanded);
+                    body.style.display = allExpanded ? 'block' : 'none';
+                });
+                document.getElementById('expand-all-btn').textContent = allExpanded ? 'Collapse All' : 'Expand All';
+            }
+
+            window.addEventListener('scroll', () => {
+                document.getElementById('scroll-top').classList.toggle('visible', window.scrollY > 300);
+            }, { passive: true });
+
+            document.addEventListener('click', e => {
+                const el = e.target.closest('.rev-link');
+                if (!el) return;
+                e.stopPropagation();
+                const kw = el.dataset.filter ? el.dataset.filter.split(' ') : null;
+                setThemeFilter(el.textContent.trim().replace(/[\u201c\u201d"]/g, ''), kw);
+            });
+
+            // Init mobile
+            buildSections();
+            initStars();
+        }
+    </script>
+</body>
+
+</html>
