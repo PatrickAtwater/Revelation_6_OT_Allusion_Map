@@ -1872,7 +1872,6 @@ before the day of the Lord comes, the great and magnificent day.'`
 
                     const bHtml = `<div class="shell" style="border-color:${book.color};color:${book.color};--book-color:${book.color}">${book.label}</div>`;
                     const bDiv = makeNode(map, book.id, book.cx, book.cy, bHtml, 'node-book');
-                    bDiv.addEventListener('click', () => { });
 
                     book.passages.forEach(p => {
                         makeLine(svg, book.cx, book.cy, p.cx, p.cy, book.color, 'line-sub');
